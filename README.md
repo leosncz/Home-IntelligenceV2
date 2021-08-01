@@ -6,5 +6,13 @@ It is also capable of interacting with every residents in a customizable way.
 
 ## For now ?
 It is still in development. </br>
-Actual computer vision state example:
+Actual computer vision state example: </br>
 ![Example](images_for_github/example.png)
+
+WIP:
+- server
+- cv
+- speech recognition
+- order analysis engine
+- interactions
+- database system
