@@ -1,4 +1,4 @@
-# Python 3 - pip
+# Python 3.7 !!
 
 pip install opencv-python
 pip install bindings
