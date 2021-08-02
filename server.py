@@ -6,6 +6,7 @@ from webcam import webcam
 from threading import *
 from datetime import datetime
 from peopleDetection import peopleDetection
+from objectRecognition import objectRecognition
 
 class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 	content = ''
@@ -43,11 +44,16 @@ class server:
 		
 		userWebcam = webcam()
 		peopleDetec = peopleDetection()
+		objReco = objectRecognition()
 		i = datetime.now()
 		while 0 == 0: # Main loop
 			if (datetime.now() - i).total_seconds() >= 5: # Capture webcam every 5 seconds
 				userWebcam.capture()
-				self.handler.content = '</br>' + str(peopleDetec.computeHowManyPerson()) + ' people detected in capture.'
+				self.handler.content = '</br><b>' + str(peopleDetec.computeHowManyPerson()) + ' </b>people detected in capture.'
+				recognizedObjects = objReco.recognition()
+				for object in recognizedObjects:
+					if object is not None:
+						self.handler.content = self.handler.content + '</br>' + object
 				i = datetime.now()
 			
 	def serve_http(self, httpd):
