@@ -8,8 +8,10 @@ The final goal is to connect this system to a home API like Jeedom in order for 
 ## For now ?
 It is still in development. </br></br>
 Actual interface state: </br>
-![example](demo.png)
+![example](images_for_github/demo.png)
 
+## Installation
+You only need **python 3.7** and install dependencies in **installation** file.
 
 WIP:
 - server
