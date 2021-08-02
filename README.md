@@ -6,9 +6,10 @@ It is also capable of interacting with every residents in a customizable way.</b
 The final goal is to connect this system to a home API like Jeedom in order for the system to control it.
 
 ## For now ?
-It is still in development. </br>
-Actual computer vision state example: </br>
-![Example](images_for_github/example.png)
+It is still in development. </br></br>
+Actual interface state: </br>
+![example](demo.png)
+
 
 WIP:
 - server
