@@ -101,6 +101,6 @@ class objectRecognition:
 				print("Detected " + text)
 				content[index] = text + ' %'
 				index = index + 1
+			# show the output image
+			cv2.imwrite("camCaptureInterpretation.png", image)
 			return content
-		# show the output image
-		#cv2.imwrite("example.png", image)
