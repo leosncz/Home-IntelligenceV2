@@ -8,19 +8,20 @@ from datetime import datetime
 from objectRecognition import objectRecognition
 
 class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
-	content = ''
 	def do_GET(self):
-		if ".jpg" in self.path or ".png" in self.path or ".js" in self.path or ".css" in self.path:
+		if "." in self.path:
 			return http.server.SimpleHTTPRequestHandler.do_GET(self)
 
-		# Actual content
-		html = 'Hey <b>you</b>, the <i>Home-IntelligenceV2</i> is running.</br>'
 		date = datetime.now()
+		# Actual content
+		html = '<!doctype html><html><head><link rel="stylesheet" href="bootstrap-3.4.1-dist/css/bootstrap.min.css"></head><body>'
+		html = html + '<nav class="navbar navbar-light bg-light"><span class="navbar-brand mb-0 h1">Home-IntelligenceV2</span></nav>'
+		html = html + 'Hey <b>you</b>, the <i>Home-IntelligenceV2</i> is running.</br>'
 		html = html + 'It is ' + str(date) + '</br>'
-		html = html + 'Webcam sample:</br><img src="camCapture.jpg"></img>'
-		html = html + self.content
-		html = html + '</br></br>Webcam sample interpretation: </br>'
-		html = html + '<img src="camCaptureInterpretation.png"></img>'
+
+		html = html + '<div class="card" style="width: 18rem;"><img class="card-img-top" src="camCaptureInterpretation.png" alt="Card image cap"><div class="card-body"><p class="card-text">This is what HIV2 sees</p></div></div>'
+
+		html = html + '</body></html>'
 		self.send_response(200)
 		self.send_header("Content-type", "text/html")
 		self.end_headers()
@@ -51,12 +52,9 @@ class server:
 				self.handler.content = ''
 				userWebcam.capture()
 				recognizedObjects = objReco.recognition()
-				for object in recognizedObjects:
-					if object is not None:
-						self.handler.content = self.handler.content + '</br>' + object
 				i = datetime.now()
 			
 	def serve_http(self, httpd):
-		# Serve http
+		# Serve http forever
 		httpd.serve_forever()
 			
