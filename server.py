@@ -6,6 +6,15 @@ from webcam import webcam
 from threading import *
 from datetime import datetime
 from objectRecognition import objectRecognition
+import signal
+import sys
+import random
+
+from config import config
+
+def signal_handler(sig, frame):
+	print('Exiting...')
+	sys.exit(0)
 
 class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 	def do_GET(self):
@@ -19,7 +28,7 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 		html = html + 'Hey <b>you</b>, the <i>Home-IntelligenceV2</i> is running.</br>'
 		html = html + 'It is ' + str(date) + '</br>'
 
-		html = html + '<div class="card" style="width: 18rem;"><img class="card-img-top" src="camCaptureInterpretation.png" alt="Card image cap"><div class="card-body"><p class="card-text">This is what HIV2 sees</p></div></div>'
+		html = html + '<div class="card" style="width: 18rem;"><img class="card-img-top" src="camCaptureInterpretation.png?'+str(random.randint(1,5))+'" alt="Card image cap"><div class="card-body"><p class="card-text">This is what HIV2 sees</p></div></div>'
 
 		html = html + '</body></html>'
 		self.send_response(200)
@@ -35,24 +44,28 @@ class server:
 		self.handler = MyHttpRequestHandler
 		self.PORT = port
 
-	# Main app loop
 	def start(self):
+		signal.signal(signal.SIGINT, signal_handler)
 		my_server = socketserver.TCPServer(("", self.PORT), self.handler)
 		print("Home-IntelligenceV2 is running at localhost:" + str(self.PORT))
 
 		thread = Thread(target = self.serve_http, args = (my_server,))
 		thread.start()
 		
+		self.mainLoop()
+
+	# Main app loop
+	def mainLoop(self):
 		userWebcam = webcam()
 		objReco = objectRecognition()
 		i = datetime.now()
 
 		while 0 == 0: # Main loop
 			if (datetime.now() - i).total_seconds() >= 5: # Capture webcam every 5 seconds
-				self.handler.content = ''
 				userWebcam.capture()
 				recognizedObjects = objReco.recognition()
 				i = datetime.now()
+			
 			
 	def serve_http(self, httpd):
 		# Serve http forever
