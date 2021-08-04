@@ -10,13 +10,16 @@ import signal
 import sys
 import random
 
-from config import config
+import config
 
 def signal_handler(sig, frame):
-	print('Exiting...')
+	print('Home-IntelligenceV2 is exiting...')
 	sys.exit(0)
 
 class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
+	video_status = 'NO'
+	audio_input_status = 'NO'
+	audio_output_status = 'NO'
 	def do_GET(self):
 		if "." in self.path:
 			return http.server.SimpleHTTPRequestHandler.do_GET(self)
@@ -27,9 +30,27 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 		html = html + '<nav class="navbar navbar-light bg-light"><span class="navbar-brand mb-0 h1">Home-IntelligenceV2</span></nav>'
 		html = html + 'Hey <b>you</b>, the <i>Home-IntelligenceV2</i> is running.</br>'
 		html = html + 'It is ' + str(date) + '</br>'
+		if (self.audio_output_status == 'OK' and self.audio_input_status == 'OK' and self.video_status == 'OK'):
+			html = html + '<div class="card" style="width: 18rem;"><img class="card-img-top" src="camCaptureInterpretation.png?'+str(random.randint(1,5))+'" alt="Card image cap"><div class="card-body"><p class="card-text">This is what HIV2 sees</p></div></div>'
+		
+		if self.audio_output_status == 'OK':
+			html = html + '<p><b>audio output </b> <span style="color: green;">'+self.audio_output_status+'</span></p>'
+		else:
+			html = html + '<p><b>audio output </b> <span style="color: red;">'+self.audio_output_status+'</span></p>'
 
-		html = html + '<div class="card" style="width: 18rem;"><img class="card-img-top" src="camCaptureInterpretation.png?'+str(random.randint(1,5))+'" alt="Card image cap"><div class="card-body"><p class="card-text">This is what HIV2 sees</p></div></div>'
+		if self.audio_input_status == 'OK':
+			html = html + '<p><b>audio input </b> <span style="color: green;">'+self.audio_input_status+'</span></p>'
+		else:
+			html = html + '<p><b>audio input </b> <span style="color: red;">'+self.audio_input_status+'</span></p>'
 
+		if self.video_status == 'OK':
+			html = html + '<p><b>video </b> <span style="color: green;">'+self.video_status+'</span></p>'
+		else:
+			html = html + '<p><b>video </b> <span style="color: red;">'+self.video_status+'</span></p>'
+
+		if (self.audio_output_status != 'OK' or self.audio_input_status != 'OK' or self.video_status != 'OK'):
+			html = html + '<p style="color: orange;">You must fix these issues before using Home-IntelligenceV2 - Check <a href="https://github.com/leosncz/Home-IntelligenceV2">this link.</a></p>'
+		
 		html = html + '</body></html>'
 		self.send_response(200)
 		self.send_header("Content-type", "text/html")
@@ -40,9 +61,19 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 class server:
 	PORT = 8000
 	handler = 0
+
 	def __init__(self, port):
 		self.handler = MyHttpRequestHandler
 		self.PORT = port
+		
+		# SYS CHECK
+			# video check
+		webcam_test = webcam()
+		self.handler.video_status = webcam_test.isCameraAlive()
+			# audio_input check TODO
+		self.handler.audio_input_status = 'OK'
+			# audio_output check TODO
+		self.handler.audio_output_status = 'OK'
 
 	def start(self):
 		signal.signal(signal.SIGINT, signal_handler)
@@ -50,6 +81,7 @@ class server:
 		print("Home-IntelligenceV2 is running at localhost:" + str(self.PORT))
 
 		thread = Thread(target = self.serve_http, args = (my_server,))
+		thread.setDaemon(True)
 		thread.start()
 		
 		self.mainLoop()
@@ -61,7 +93,7 @@ class server:
 		i = datetime.now()
 
 		while 0 == 0: # Main loop
-			if (datetime.now() - i).total_seconds() >= 5: # Capture webcam every 5 seconds
+			if (datetime.now() - i).total_seconds() >= 5 and (self.handler.audio_output_status == 'OK' and self.handler.audio_input_status == 'OK' and self.handler.video_status == 'OK'): # Capture webcam every 5 seconds
 				userWebcam.capture()
 				recognizedObjects = objReco.recognition()
 				i = datetime.now()
