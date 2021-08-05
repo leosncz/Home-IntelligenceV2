@@ -6,6 +6,7 @@ from webcam import webcam
 from threading import *
 from datetime import datetime
 from objectRecognition import objectRecognition
+from speechRecognition import speechRecognition
 import signal
 import sys
 import random
@@ -93,14 +94,20 @@ class server:
 	def mainLoop(self):
 		userWebcam = webcam()
 		objReco = objectRecognition()
+		speechReco = speechRecognition()
+		speechReco.start_thread()
 		i = datetime.now()
 
 		while 0 == 0: # Main loop
+			# CV
 			if (datetime.now() - i).total_seconds() >= config.cam_interval and (self.handler.audio_output_status == 'OK' and self.handler.audio_input_status == 'OK' and self.handler.video_status == 'OK'): # Capture webcam every 5 seconds
 				userWebcam.capture()
 				recognizedObjects = objReco.recognition()
 				i = datetime.now()
-			
+			# Speech recognition
+			sentence = speechReco.getSpeechToText()
+			if sentence != "no stt available":
+				print(sentence)
 			
 	def serve_http(self, httpd):
 		# Serve http forever

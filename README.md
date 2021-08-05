@@ -17,10 +17,12 @@ Then, download one of the speech recognition language model at https://alphaceph
 The last step is to download and put in **darknet** folder the neural net file **yolov3.weights** at https://pjreddie.com/media/files/yolov3.weights.</br>
 You can start **main.py**.</br>
 
-WIP:
+Working:
 - server
 - cv
 - speech recognition
+</br>
+WIP:
 - order analysis engine
 - interactions
 - database system
