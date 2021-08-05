@@ -14,6 +14,7 @@ Actual state: </br>
 ## Installation
 You only need **python 3.7** and install dependencies in **installation** file.</br>
 Then, download one of the speech recognition language model at https://alphacephei.com/vosk/models, and put its content in the **model** directory.</br>
+The last step is to download and put in **darknet** folder the neural net file **yolov3.weights** at https://pjreddie.com/media/files/yolov3.weights.</br>
 You can start **main.py**.</br>
 
 WIP:
