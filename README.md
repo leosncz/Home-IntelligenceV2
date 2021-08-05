@@ -12,7 +12,9 @@ Actual state: </br>
 ![example](images_for_github/demo2.png)
 
 ## Installation
-You only need **python 3.7** and install dependencies in **installation** file.
+You only need **python 3.7** and install dependencies in **installation** file.</br>
+Then, download one of the speech recognition language model at https://alphacephei.com/vosk/models, and put its content in the **model** directory.</br>
+You can start **main.py**.</br>
 
 WIP:
 - server
