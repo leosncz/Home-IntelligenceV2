@@ -51,6 +51,9 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 		if (self.audio_output_status != 'OK' or self.audio_input_status != 'OK' or self.video_status != 'OK'):
 			html = html + '<p style="color: orange;">You must fix these issues before using Home-IntelligenceV2 - Check <a href="https://github.com/leosncz/Home-IntelligenceV2">this link.</a></p>'
 		
+		html = html + '</br><p style="text-decoration: underline;"><b>Configuration (you can edit <i>config.py</i> file):</b> </p>'
+		html = html + '<p><b>Separator words:</b> ' + str(config.separator_words) + '</p><p><b>Orders: </b>' + str(config.orders) + '</p>'
+		html = html + '<p><b>Cam interval: </b>' + str(config.cam_interval) + ' seconds</p>'
 		html = html + '</body></html>'
 		self.send_response(200)
 		self.send_header("Content-type", "text/html")
@@ -93,7 +96,7 @@ class server:
 		i = datetime.now()
 
 		while 0 == 0: # Main loop
-			if (datetime.now() - i).total_seconds() >= 5 and (self.handler.audio_output_status == 'OK' and self.handler.audio_input_status == 'OK' and self.handler.video_status == 'OK'): # Capture webcam every 5 seconds
+			if (datetime.now() - i).total_seconds() >= config.cam_interval and (self.handler.audio_output_status == 'OK' and self.handler.audio_input_status == 'OK' and self.handler.video_status == 'OK'): # Capture webcam every 5 seconds
 				userWebcam.capture()
 				recognizedObjects = objReco.recognition()
 				i = datetime.now()

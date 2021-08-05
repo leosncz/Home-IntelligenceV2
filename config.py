@@ -7,7 +7,10 @@ separator_words = ['and','then','et','puis'] # Here I put only english & french 
 
 # This part is self-explanatory
 orders = {"allume": {"salon": "url", "cuisine": "url", "entre": "url"},
-	"etein": {"salon": "url", "cuisine": "url", "entre": "url"},
+	"eteint": {"salon": "url", "cuisine": "url", "entre": "url"},
 	"ouvre": {"portail": "url"},
 	"ferme": {"portail": "url"}
 	}
+
+# Interval in second when the software should update its camera understanding
+cam_interval = 5
