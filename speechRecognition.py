@@ -9,7 +9,11 @@ from threading import *
 class speechRecognition:
     q = 0
     speech_to_text = ""
+    started = "no"
     
+    def hasStarted(self):
+    	return self.started
+
     def getSpeechToText(self):
         if self.speech_to_text == "":
             return "no stt available"
@@ -67,6 +71,7 @@ class speechRecognition:
                                     channels=1, callback=self.callback):
                     print('#' * 80)
                     print('Press Ctrl+C to stop the recording')
+                    self.started = "OK"
                     print('#' * 80)
 
                     rec = vosk.KaldiRecognizer(model, args.samplerate)

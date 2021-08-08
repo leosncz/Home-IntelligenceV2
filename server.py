@@ -100,7 +100,7 @@ class server:
 
 		while 0 == 0: # Main loop
 			# CV
-			if (datetime.now() - i).total_seconds() >= config.cam_interval and (self.handler.audio_output_status == 'OK' and self.handler.audio_input_status == 'OK' and self.handler.video_status == 'OK'): # Capture webcam every 5 seconds
+			if speechReco.hasStarted() == "OK" and (datetime.now() - i).total_seconds() >= config.cam_interval and (self.handler.audio_output_status == 'OK' and self.handler.audio_input_status == 'OK' and self.handler.video_status == 'OK'): # Capture webcam every 5 seconds
 				userWebcam.capture()
 				recognizedObjects = objReco.recognition()
 				i = datetime.now()

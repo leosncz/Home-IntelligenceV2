@@ -1,4 +1,5 @@
 model/
 model_fast/
+model_slow/
 
 darknet/yolov3.weights
