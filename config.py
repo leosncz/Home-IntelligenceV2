@@ -17,4 +17,5 @@ orders = {"allume": {"salon": "http://192.168.1.23/core/api/jeeApi.php?apikey=Yw
 # Interval in second when the software should update its camera understanding
 cam_interval = 5
 
+# If you want the software to not using any webcam, set this value to 'YES' (it is by default)
 override_cam = 'YES' #'NO'

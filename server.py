@@ -33,7 +33,7 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 		html = html + '<nav class="navbar navbar-light bg-light"><span class="navbar-brand mb-0 h1">Home-IntelligenceV2</span></nav>'
 		html = html + 'Hey <b>you</b>, the <i>Home-IntelligenceV2</i> is running.</br>'
 		html = html + 'It is ' + str(date) + '</br>'
-		if (self.audio_output_status == 'OK' and self.audio_input_status == 'OK' and self.video_status == 'OK'):
+		if self.video_status == 'OK' and config.override_cam == "NO":
 			html = html + '<div class="card" style="width: 18rem;"><img class="card-img-top" src="camCaptureInterpretation.png?'+str(random.randint(1,5))+'" alt="Card image cap"><div class="card-body"><p class="card-text">This is what HIV2 sees</p></div></div>'
 		
 		if self.audio_output_status == 'OK':
@@ -74,7 +74,7 @@ class server:
 		
 		# SYS CHECK
 			# video check
-		if config.override_cam != "NO":
+		if config.override_cam == "NO":
 			webcam_test = webcam()
 			self.handler.video_status = webcam_test.isCameraAlive()
 		else:
@@ -100,7 +100,8 @@ class server:
 		userWebcam = webcam()
 		objReco = objectRecognition()
 		speechReco = speechRecognition()
-		speechReco.start_thread()
+		if (self.handler.audio_output_status == 'OK' and self.handler.audio_input_status == 'OK' and self.handler.video_status == 'OK'):
+			speechReco.start_thread()
 		orderAnalyse = orderAnalysis()
 		i = datetime.now()
 
@@ -110,12 +111,13 @@ class server:
 				userWebcam.capture()
 				recognizedObjects = objReco.recognition()
 				i = datetime.now()
-			# Speech recognition
-			sentence = speechReco.getSpeechToText()
-			if sentence != "no stt available":
-				sentence = json.loads(sentence)
-				print(sentence['text'])
-				orderAnalyse.analyse(sentence['text'])
+			if (self.handler.audio_output_status == 'OK' and self.handler.audio_input_status == 'OK' and self.handler.video_status == 'OK'):
+				# Speech recognition
+				sentence = speechReco.getSpeechToText()
+				if sentence != "no stt available":
+					sentence = json.loads(sentence)
+					print(sentence['text'])
+					orderAnalyse.analyse(sentence['text'])
 			
 	def serve_http(self, httpd):
 		# Serve http forever
