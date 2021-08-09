@@ -21,8 +21,7 @@ Working:
 - server
 - cv
 - speech recognition
-
-WIP:
 - order analysis engine
+WIP:
 - interactions
-- database system
+
