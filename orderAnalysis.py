@@ -1,5 +1,6 @@
 # Author: @leosncz
 import config
+import requests
 import re
 
 class orderAnalysis:
@@ -15,9 +16,8 @@ class orderAnalysis:
 		
 		orders = config.orders
 		lastOrder = ""
-
+		
 		for session in finalInput:
-			print("Analyse de > " + session)
 			containsOrder = "NO"
 			for order in orders:
 				if order in session:
@@ -27,7 +27,7 @@ class orderAnalysis:
 					for contexte in orders[order]:
 						if contexte in session:
 							print(contexte + " OK! (url: " + orders[order][contexte] + ")")
-							# TODO REQUEST TO HOME API
+							requests.get(orders[order][contexte])
 							contextExists = "OK"
 					if contextExists == "NO":
 						print("Ce contexte n'existe pas, veuillez l'enregistrer.")
@@ -39,10 +39,9 @@ class orderAnalysis:
 					for contexte in orders[lastOrder]:
 						if contexte in session:
 							print(contexte + " OK! (url: " + orders[lastOrder][contexte] + ")")
+							requests.get(orders[lastOrder][contexte])
 							contextExists = "OK"
 					if contextExists == "NO":
 						print("Ce contexte n'existe pas, veuillez l'enregistrer.")
 
-test = orderAnalysis()
-test.analyse("  la ")
 		

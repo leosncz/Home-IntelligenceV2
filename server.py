@@ -7,11 +7,13 @@ from threading import *
 from datetime import datetime
 from objectRecognition import objectRecognition
 from speechRecognition import speechRecognition
+from orderAnalysis import *
 import signal
 import sys
 import random
 
 import config
+import json
 
 def signal_handler(sig, frame):
 	print('Home-IntelligenceV2 is exiting...')
@@ -72,8 +74,11 @@ class server:
 		
 		# SYS CHECK
 			# video check
-		webcam_test = webcam()
-		self.handler.video_status = webcam_test.isCameraAlive()
+		if config.override_cam != "NO":
+			webcam_test = webcam()
+			self.handler.video_status = webcam_test.isCameraAlive()
+		else:
+			self.handler.video_status = 'OK'
 			# audio_input check TODO
 		self.handler.audio_input_status = 'OK'
 			# audio_output check TODO
@@ -96,18 +101,21 @@ class server:
 		objReco = objectRecognition()
 		speechReco = speechRecognition()
 		speechReco.start_thread()
+		orderAnalyse = orderAnalysis()
 		i = datetime.now()
 
 		while 0 == 0: # Main loop
 			# CV
-			if speechReco.hasStarted() == "OK" and (datetime.now() - i).total_seconds() >= config.cam_interval and (self.handler.audio_output_status == 'OK' and self.handler.audio_input_status == 'OK' and self.handler.video_status == 'OK'): # Capture webcam every 5 seconds
+			if config.override_cam == "NO" and speechReco.hasStarted() == "OK" and (datetime.now() - i).total_seconds() >= config.cam_interval and (self.handler.audio_output_status == 'OK' and self.handler.audio_input_status == 'OK' and self.handler.video_status == 'OK'): # Capture webcam every 5 seconds
 				userWebcam.capture()
 				recognizedObjects = objReco.recognition()
 				i = datetime.now()
 			# Speech recognition
 			sentence = speechReco.getSpeechToText()
 			if sentence != "no stt available":
-				print(sentence)
+				sentence = json.loads(sentence)
+				print(sentence['text'])
+				orderAnalyse.analyse(sentence['text'])
 			
 	def serve_http(self, httpd):
 		# Serve http forever
